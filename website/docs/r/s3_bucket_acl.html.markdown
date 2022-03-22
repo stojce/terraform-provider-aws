@@ -19,6 +19,12 @@ Provides an S3 bucket ACL resource.
 ```terraform
 resource "aws_s3_bucket" "example" {
   bucket = "my-tf-example-bucket"
+
+  lifecycle {
+    ignore_changes = [
+      grant
+    ]
+  }
 }
 
 resource "aws_s3_bucket_acl" "example_bucket_acl" {
@@ -34,6 +40,12 @@ data "aws_canonical_user_id" "current" {}
 
 resource "aws_s3_bucket" "example" {
   bucket = "my-tf-example-bucket"
+
+  lifecycle {
+    ignore_changes = [
+      grant
+    ]
+  }
 }
 
 resource "aws_s3_bucket_acl" "example" {
@@ -59,6 +71,20 @@ resource "aws_s3_bucket_acl" "example" {
       id = data.aws_canonical_user_id.current.id
     }
   }
+}
+```
+
+## Usage Notes
+
+~> **NOTE:** To avoid conflicts always add the following lifecycle object to the `aws_s3_bucket` resource of the source bucket.
+
+This resource implements the same features that are provided by the `acl` argument and `grant` configuration blocks of the [`aws_s3_bucket` resource](s3_bucket.html.markdown). To avoid conflicts or unexpected apply results, a lifecycle configuration is needed on the `aws_s3_bucket` to ignore changes to the internal `grant` configuration blocks.  Failure to add the `lifecycle` configuration to the `aws_s3_bucket` will result in conflicting state results.
+
+```
+lifecycle {
+  ignore_changes = [
+    grant
+  ]
 }
 ```
 
