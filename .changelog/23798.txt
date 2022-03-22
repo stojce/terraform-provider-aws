@@ -1,0 +1,3 @@
+```release-note:note
+resource/aws_s3_bucket: The `acl` and `grant` parameters are Optional. If you are also using the `aws_s3_bucket_acl` resource, please see the documentation for configuration details.
+```
