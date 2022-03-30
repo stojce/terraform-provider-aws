@@ -95,6 +95,7 @@ import (
 	"github.com/hashicorp/terraform-provider-aws/internal/service/imagebuilder"
 	"github.com/hashicorp/terraform-provider-aws/internal/service/inspector"
 	"github.com/hashicorp/terraform-provider-aws/internal/service/iot"
+	"github.com/hashicorp/terraform-provider-aws/internal/service/iotsitewise"
 	"github.com/hashicorp/terraform-provider-aws/internal/service/kafka"
 	"github.com/hashicorp/terraform-provider-aws/internal/service/kafkaconnect"
 	"github.com/hashicorp/terraform-provider-aws/internal/service/keyspaces"
@@ -1512,6 +1513,9 @@ func Provider() *schema.Provider {
 			"aws_iot_thing_principal_attachment": iot.ResourceThingPrincipalAttachment(),
 			"aws_iot_thing_type":                 iot.ResourceThingType(),
 			"aws_iot_topic_rule":                 iot.ResourceTopicRule(),
+
+			"aws_iotsitewise_portal":  iotsitewise.ResourcePortal(),
+			"aws_iotsitewise_project": iotsitewise.ResourceProject(),
 
 			"aws_msk_cluster":                  kafka.ResourceCluster(),
 			"aws_msk_configuration":            kafka.ResourceConfiguration(),
