@@ -116,7 +116,6 @@ func resourceProjectUpdate(d *schema.ResourceData, meta interface{}) error {
 	conn := meta.(*conns.AWSClient).IoTSiteWiseConn
 
 	input := &iotsitewise.UpdateProjectInput{
-
 		ProjectId:   aws.String(d.Id()),
 		ProjectName: aws.String(d.Get("name").(string)),
 	}

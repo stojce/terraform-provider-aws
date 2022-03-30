@@ -3,6 +3,7 @@ package iotsitewise
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/iotsitewise"
@@ -35,6 +36,11 @@ func ResourcePortal() *schema.Resource {
 				Required:     true,
 				ValidateFunc: validation.StringLenBetween(1, 128),
 			},
+			"description": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validation.StringLenBetween(1, 1000),
+			},
 			"portal_contact_email": {
 				Type:         schema.TypeString,
 				Required:     true,
@@ -44,6 +50,29 @@ func ResourcePortal() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: verify.ValidARN,
+			},
+
+			"client_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"start_url": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+
+			"auth_mode": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+
+			"creation_date": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"last_update_date": {
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 		},
 	}
@@ -80,7 +109,11 @@ func resourcePortalCreate(d *schema.ResourceData, meta interface{}) error {
 func resourcePortalRead(d *schema.ResourceData, meta interface{}) error {
 	conn := meta.(*conns.AWSClient).IoTSiteWiseConn
 
-	output, err := FindPortalById(conn, d.Id())
+	input := &iotsitewise.DescribePortalInput{
+		PortalId: aws.String(d.Id()),
+	}
+
+	output, err := conn.DescribePortal(input)
 
 	if !d.IsNewResource() && tfresource.NotFound(err) {
 		log.Printf("[WARN] IoTSiteWise Portal (%s) not found, removing from state", d.Id())
@@ -97,6 +130,18 @@ func resourcePortalRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("role_arn", output.RoleArn)
 	d.Set("name", output.PortalName)
 	d.Set("portal_contact_email", output.PortalContactEmail)
+	d.Set("autn_mode", output.PortalAuthMode)
+	d.Set("description", output.PortalDescription)
+
+	d.Set("client_id", output.PortalClientId)
+	d.Set("start_url", output.PortalStartUrl)
+	d.Set("creation_date", output.PortalCreationDate.Format(time.RFC3339))
+	d.Set("last_update_date", output.PortalLastUpdateDate.Format(time.RFC3339))
+
+	// Alarms *Alarms `locationName:"alarms" type:"structure"`
+	// NotificationSenderEmail *string `locationName:"notificationSenderEmail" min:"1" type:"string"`
+	// PortalLogoImageLocation *ImageLocation `locationName:"portalLogoImageLocation" type:"structure"`
+	// PortalStatus *PortalStatus `locationName:"portalStatus" type:"structure" required:"true"`
 
 	return nil
 }
