@@ -86,3 +86,28 @@ package iotsitewise
 
 // 	return nil
 // }
+
+// aws iotsitewise list-access-policies --resource-type "PORTAL" --resource-id 2e1b4315-94e1-433b-aaf9-0472261ec1db
+
+// {
+//     "accessPolicySummaries": [
+//         {
+//             "id": "34177956-a3e0-4279-aff8-8794c7db867e",
+//             "identity": {
+//                 "user": {
+//                     "id": "c3673d5d4b-8995a246-9149-44dc-978e-262cc1f2d137"
+//                 }
+//             },
+//             "resource": {
+//                 "portal": {
+//                     "id": "2e1b4315-94e1-433b-aaf9-0472261ec1db"
+//                 }
+//             },
+//             "permission": "ADMINISTRATOR",
+//             "creationDate": "2022-03-30T17:26:46+02:00",
+//             "lastUpdateDate": "2022-03-30T17:26:46+02:00"
+//         }
+//     ]
+// }
+
+// aws iotsitewise delete-access-policy --access-policy-id 34177956-a3e0-4279-aff8-8794c7db867e

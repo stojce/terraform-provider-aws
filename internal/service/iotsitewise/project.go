@@ -102,7 +102,6 @@ func resourceProjectRead(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	d.Set("arn", output.ProjectArn)
-	d.Set("id", output.ProjectId)
 	d.Set("name", output.ProjectName)
 	d.Set("portal_id", output.PortalId)
 	d.Set("description", output.ProjectDescription)

@@ -60,7 +60,6 @@ func ResourcePortal() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-
 			"auth_mode": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -103,6 +102,14 @@ func resourcePortalCreate(d *schema.ResourceData, meta interface{}) error {
 
 	d.SetId(aws.StringValue(output.PortalId))
 
+	err = conn.WaitUntilPortalActive(&iotsitewise.DescribePortalInput{
+		PortalId: output.PortalId,
+	})
+
+	if err != nil {
+		return fmt.Errorf("error waiting for Portal (%s) to become ACTIVE: %w", aws.StringValue(output.PortalId), err)
+	}
+
 	return resourcePortalRead(d, meta)
 }
 
@@ -126,11 +133,10 @@ func resourcePortalRead(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	d.Set("arn", output.PortalArn)
-	d.Set("id", output.PortalId)
 	d.Set("role_arn", output.RoleArn)
 	d.Set("name", output.PortalName)
 	d.Set("portal_contact_email", output.PortalContactEmail)
-	d.Set("autn_mode", output.PortalAuthMode)
+	d.Set("auth_mode", output.PortalAuthMode)
 	d.Set("description", output.PortalDescription)
 
 	d.Set("client_id", output.PortalClientId)
